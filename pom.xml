@@ -11,7 +11,7 @@
 	<groupId>hu.bp.netcafe</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>backend</name>
+	<name>netcafe-backend</name>
 	<description>Backend for OpenWRT Netcafe</description>
 
 	<properties>

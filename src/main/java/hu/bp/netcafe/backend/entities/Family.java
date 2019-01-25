@@ -17,6 +17,10 @@ public class Family {
   private UUID id;
   private String name;
 
+  public Family() {
+    this("");
+  }
+
   public Family(String name) {
     this.id = UUID.randomUUID();
     this.name = name;

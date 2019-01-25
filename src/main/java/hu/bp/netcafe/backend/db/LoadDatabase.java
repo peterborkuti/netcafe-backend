@@ -1,5 +1,7 @@
-package hu.bp.netcafe.backend.entities;
+package hu.bp.netcafe.backend.db;
 
+import hu.bp.netcafe.backend.db.entity.Family;
+import hu.bp.netcafe.backend.db.repository.FamilyRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.CommandLineRunner;

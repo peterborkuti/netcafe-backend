@@ -1,4 +1,4 @@
-package hu.bp.netcafe.backend.entities;
+package hu.bp.netcafe.backend.db.entity;
 
 import lombok.Data;
 

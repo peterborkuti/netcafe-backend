@@ -1,4 +1,6 @@
 package hu.bp.netcafe.backend.db.entity;
 
-public class User {
+public enum Role {
+  PARENT,
+  CHILD
 }

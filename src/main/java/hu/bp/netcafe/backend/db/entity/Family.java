@@ -2,12 +2,11 @@ package hu.bp.netcafe.backend.db.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Type;
+import lombok.ToString;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,8 +14,9 @@ import java.util.UUID;
 @Entity
 public class Family {
   @Id
-  @Type(type = "pg-uuid")
+  @Column( columnDefinition = "uuid", updatable = false )
   private UUID id;
+
   private String name;
 
   /*
@@ -25,10 +25,9 @@ public class Family {
   relationship (i.e. contains the foreign key for the query to
   find all members of the family.)
   */
-  /*
-  @OneToMany(mappedBy = "family")
+  @ToString.Exclude
+  @OneToMany(mappedBy = "family", fetch = FetchType.EAGER, cascade= CascadeType.ALL)
   private List<Member> members;
-  */
 
   public Family() {
     this("");
@@ -37,5 +36,29 @@ public class Family {
   public Family(String name) {
     this.id = UUID.randomUUID();
     this.name = name;
+    this.members = new ArrayList<>();
   }
+
+  public Family(String name, UUID id) {
+    this.id = id;
+    this.name = name;
+    this.members = new ArrayList<>();
+  }
+
+  public Family(String name, UUID id, List<Member> members) {
+    this.id = id;
+    this.name = name;
+    this.members = members;
+  }
+
+  public void addMember(Member member) {
+    member.setFamily(this);
+    members.add(member);
+  }
+
+  public void removeMember(Member member) {
+    members.remove(member);
+    member.setFamily(null);
+  }
+
 }

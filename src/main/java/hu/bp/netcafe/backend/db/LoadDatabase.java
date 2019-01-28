@@ -18,33 +18,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class LoadDatabase {
   @Order(1)
   @Bean
-  CommandLineRunner initFamily(FamilyRepository familyRepository) {
+  CommandLineRunner initFamily(FamilyRepository familyRepository, MemberRepository memberRepository) {
     return args -> {
-      Family family1 = new Family("Family 1");
-      log.info("Preloading " + familyRepository.save(family1));
-      log.info("Preloading " + familyRepository.save(new Family("Family 2")));
+      fillDB(familyRepository, memberRepository);
     };
   }
 
-  @Order(2)
-  @Bean
-  CommandLineRunner initMember(FamilyRepository familyRepository, MemberRepository memberRepository) {
-    return args -> {
-      Family family = familyRepository.findAll().get(0);
+  private static void fillDB(FamilyRepository familyRepository, MemberRepository memberRepository) {
+    Member user1 = new Member("Family 1 Admin", Role.PARENT);
+    Member user2 = new Member("Family 1 Child", Role.CHILD);
+    Family family = new Family("Family 1");
 
-      Member user1 = new Member("Family 1 Admin", Role.PARENT);
-      user1.setFamily(family);
-      familyRepository.save(family);
-      log.info("Preloading " + memberRepository.save(user1));
+    family.addMember(user1);
 
-      Member user2 = new Member("Family 1 Child 1", Role.CHILD);
-      user1.setFamily(family);
-      Member user3 = new Member("Family 1 Child 2", Role.CHILD);
-      user1.setFamily(family);
+    familyRepository.save(family);
 
-      log.info("Preloading " + memberRepository.save(user2));
-      log.info("Preloading " + memberRepository.save(user3));
-    };
+    family = familyRepository.findAll().get(0);
+    family.addMember(user2);
+    familyRepository.save(family);
   }
 
 }

@@ -1,6 +1,8 @@
 package hu.bp.netcafe.backend.db.entity;
 
 import lombok.Data;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -8,9 +10,10 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Slf4j
 public class Member {
   @Id
-  @Type(type = "pg-uuid")
+  @Column( columnDefinition = "uuid", updatable = false )
   private UUID id;
 
   private String name;
@@ -25,6 +28,7 @@ public class Member {
   */
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(name="FAMILY_ID")
+  //@ToString.Exclude
   private Family family;
 
   public Member() {
@@ -32,9 +36,10 @@ public class Member {
   }
 
   public Member(String name, Role role) {
+    log.error("Member:" + name + "," + role);
     this.id = UUID.randomUUID();
     this.name = name;
-
     this.role = role;
   }
+
 }

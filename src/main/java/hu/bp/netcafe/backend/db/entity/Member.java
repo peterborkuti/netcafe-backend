@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -20,6 +22,10 @@ public class Member {
 
   @Enumerated(EnumType.STRING)
   private Role role;
+
+  @ToString.Exclude
+  @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<Device> devices;
 
   /*
   ManyToOne: User can have only one family but a Family can have many users
@@ -40,6 +46,16 @@ public class Member {
     this.id = UUID.randomUUID();
     this.name = name;
     this.role = role;
+    this.devices = new ArrayList<>();
   }
 
+  public void addDevice(Device device) {
+  	device.setOwner(this);
+  	this.devices.add(device);
+  }
+
+	public void removeDevice(Device device) {
+		this.devices.remove(device);
+		device.setOwner(null);
+	}
 }

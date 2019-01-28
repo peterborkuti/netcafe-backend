@@ -1,5 +1,6 @@
 package hu.bp.netcafe.backend.db;
 
+import hu.bp.netcafe.backend.db.entity.Device;
 import hu.bp.netcafe.backend.db.entity.Family;
 import hu.bp.netcafe.backend.db.entity.Role;
 import hu.bp.netcafe.backend.db.entity.Member;
@@ -28,7 +29,9 @@ public class LoadDatabase {
     Member user1 = new Member("Family 1 Admin", Role.PARENT);
     Member user2 = new Member("Family 1 Child", Role.CHILD);
     Family family = new Family("Family 1");
+    Device device = new Device("Laptop", "00:10:20:30:40:50");
 
+    user1.addDevice(device);
     family.addMember(user1);
 
     familyRepository.save(family);

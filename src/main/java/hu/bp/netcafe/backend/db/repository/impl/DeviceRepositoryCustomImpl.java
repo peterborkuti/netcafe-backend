@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Repository
-@Transactional(readOnly=false)
 public class DeviceRepositoryCustomImpl implements DeviceRepositoryCustom {
   @PersistenceContext
   EntityManager entityManager;
@@ -31,22 +30,23 @@ public class DeviceRepositoryCustomImpl implements DeviceRepositoryCustom {
    * @return
    */
   @Override
-  @Transactional(readOnly = false)
   public int decreaseRemainingTimeAllOnNet() {
-    decreaseTime = entityManager.createQuery(
-      "UPDATE Device AS d SET d.remainingTime = d.remainingTime - 1 " +
-        "WHERE d.onNet = true AND d.remainingTime > 0");
+      decreaseTime = entityManager.createQuery(
+        "UPDATE Device AS d SET d.remainingTime = d.remainingTime - 1 " +
+          "WHERE d.onNet = true AND d.remainingTime > 0");
 
-    checkAndSetOnNet = entityManager.createQuery(
-      "UPDATE Device AS d SET d.onNet = false " +
-        "WHERE d.onNet = true AND d.remainingTime = 0");
+      checkAndSetOnNet = entityManager.createQuery(
+        "UPDATE Device AS d SET d.onNet = false " +
+          "WHERE d.onNet = true AND d.remainingTime = 0");
+
+    entityManager.flush();
 
     int updateCount = decreaseTime.executeUpdate();
 
     if (updateCount > 0) {
       checkAndSetOnNet.executeUpdate();
 
-      entityManager.flush();
+      entityManager.clear();
     }
 
 

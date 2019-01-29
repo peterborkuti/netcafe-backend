@@ -46,21 +46,4 @@ public class Device {
     this.allocatedTime = 0;
     this.onNet = false;
   }
-
-  public static Device decrementRemainingTimeAndSetOnNetIfDeviceIsOnNet(Device device) {
-    if (!device.isOnNet()) {
-      return device;
-    }
-
-    if (device.getRemainingTime() >= 1) {
-      device.setRemainingTime(device.getRemainingTime() - 1);
-    }
-
-    if (device.getRemainingTime() == 0) {
-      device.setOnNet(false);
-    }
-
-    return device;
-  }
-
 }

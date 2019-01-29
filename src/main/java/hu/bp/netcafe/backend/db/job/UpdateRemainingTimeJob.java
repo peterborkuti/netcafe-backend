@@ -20,18 +20,8 @@ public class UpdateRemainingTimeJob extends QuartzJobBean{
   @Autowired
   private DeviceRepository deviceRepository;
 
-  @Transactional(readOnly=false)
   @Override
   protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-    /**
-     * I tried parallel(), but http://coopsoft.com/ar/Calamity2Article.html
-     * I used deviceRepository.saveAll(), but for that, I had to collect devices first, which
-     * eliminates the advantages of using a stream, so the option is forEach.
-     */
-      deviceRepository.findAllOnNet().
-      map(Device::decrementRemainingTimeAndSetOnNetIfDeviceIsOnNet).
-      forEach(deviceRepository::save);
-
-    log.info("Job run");
+    int updated = deviceRepository.decreaseRemainingTimeAllOnNet();
   }
 }

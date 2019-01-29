@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -20,25 +21,35 @@ import java.util.stream.Stream;
 public class DeviceRepositoryCustomImpl implements DeviceRepositoryCustom {
   @PersistenceContext
   EntityManager entityManager;
+
+  private Query decreaseTime;
+  private Query checkAndSetOnNet;
+
   /**
    * Finds all devices which are consuming the network
    *
    * @return
    */
   @Override
-  public Stream<Device> findAllOnNet() {
-    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+  @Transactional(readOnly = false)
+  public int decreaseRemainingTimeAllOnNet() {
+    decreaseTime = entityManager.createQuery(
+      "UPDATE Device AS d SET d.remainingTime = d.remainingTime - 1 " +
+        "WHERE d.onNet = true AND d.remainingTime > 0");
 
-    CriteriaQuery<Device> criteriaQuery = criteriaBuilder.createQuery(Device.class);
+    checkAndSetOnNet = entityManager.createQuery(
+      "UPDATE Device AS d SET d.onNet = false " +
+        "WHERE d.onNet = true AND d.remainingTime = 0");
 
-    Root<Device> device = criteriaQuery.from(Device.class);
+    int updateCount = decreaseTime.executeUpdate();
 
-    Predicate onNetPredicate = criteriaBuilder.isTrue(device.get("onNet"));
+    if (updateCount > 0) {
+      checkAndSetOnNet.executeUpdate();
 
-    criteriaQuery.where(onNetPredicate);
+      entityManager.flush();
+    }
 
-    TypedQuery<Device> query = entityManager.createQuery(criteriaQuery);
 
-    return query.getResultStream();
+    return updateCount;
   }
 }

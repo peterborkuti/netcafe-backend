@@ -31,7 +31,6 @@ public class Device {
   */
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(name="MEMBER_ID")
-  //@ToString.Exclude
   private Member owner;
 
   public Device() {

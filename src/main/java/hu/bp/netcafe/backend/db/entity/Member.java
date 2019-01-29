@@ -42,7 +42,6 @@ public class Member {
   }
 
   public Member(String name, Role role) {
-    log.error("Member:" + name + "," + role);
     this.id = UUID.randomUUID();
     this.name = name;
     this.role = role;

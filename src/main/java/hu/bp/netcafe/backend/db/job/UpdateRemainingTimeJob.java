@@ -13,8 +13,8 @@ public class UpdateRemainingTimeJob {
   @Autowired
   private DeviceRepository deviceRepository;
 
-  @Scheduled(fixedDelay = 2000)
+  @Scheduled(fixedDelay = 60000)
   public void decreaseTimeInDevices() {
-    int updated = deviceRepository.decreaseRemainingTimeAllOnNet();
+    deviceRepository.decreaseRemainingTimeAllOnNet();
   }
 }

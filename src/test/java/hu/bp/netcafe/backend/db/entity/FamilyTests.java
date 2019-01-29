@@ -45,6 +45,7 @@ public class FamilyTests {
     assertEquals(name, familyRepository.findAll().get(0).getName());
   }
 
+  @Test
   public void membersShouldBeListedInFamily() {
     String name = "FamilyName";
     Family family = new Family(name);

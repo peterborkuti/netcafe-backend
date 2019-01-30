@@ -46,7 +46,7 @@ public class MemberTests {
     deviceRepository.save(dev);
 
     assertEquals(name, deviceRepository.findAll().get(0).getName());
-    assertEquals(mac, deviceRepository.findAll().get(0).getMacAdress());
+    assertEquals(mac, deviceRepository.findAll().get(0).getMacAddress());
   }
 
   @Test

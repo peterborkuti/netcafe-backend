@@ -1,5 +1,6 @@
 package hu.bp.netcafe.backend.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +17,7 @@ public class Device {
 
   private String name;
 
-  private String macAdress;
+  private String macAddress;
 
   private int remainingTime;
 
@@ -31,16 +32,17 @@ public class Device {
   */
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(name="MEMBER_ID")
+  @JsonIgnore
   private Member owner;
 
   public Device() {
     this("", "");
   }
 
-  public Device(String name, String macAdress) {
+  public Device(String name, String macAddress) {
     this.id = UUID.randomUUID();
     this.name = name;
-    this.macAdress = macAdress;
+    this.macAddress = macAddress;
     this.remainingTime = 0;
     this.allocatedTime = 0;
     this.onNet = false;
